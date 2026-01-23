@@ -4,7 +4,11 @@ import { useDynamicComponent } from "./use-dynamic-component";
 import type { TextNode } from "./types";
 import type { MessageProcessor } from "./processor";
 
-const md = markdownit();
+const md = markdownit({
+  html: false,
+  linkify: true,
+  typographer: true,
+});
 
 interface TextProps {
   processor: MessageProcessor;

@@ -384,6 +384,171 @@ const PRESET_LAYOUTS = [
       },
     ],
   },
+  {
+    name: "Purchase Complete",
+    components: [
+      {
+        id: "root",
+        type: "Card",
+        properties: {
+          child: {
+            id: "main-column",
+            type: "Column",
+            properties: {
+              gap: "medium",
+              alignment: "center",
+              children: [
+                {
+                  id: "success-icon",
+                  type: "Icon",
+                  properties: {
+                    name: { literalString: "check_circle" },
+                  },
+                },
+                {
+                  id: "title",
+                  type: "Text",
+                  properties: {
+                    text: { literalString: "Purchase Complete" },
+                    usageHint: "h2",
+                  },
+                },
+                {
+                  id: "product-row",
+                  type: "Row",
+                  properties: {
+                    gap: "medium",
+                    alignment: "center",
+                    children: [
+                      {
+                        id: "product-image",
+                        type: "Image",
+                        properties: {
+                          url: {
+                            literalString:
+                              "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=100&h=100&fit=crop",
+                          },
+                          altText: { literalString: "Wireless Headphones Pro" },
+                          fit: "cover",
+                        },
+                      },
+                      {
+                        id: "product-info",
+                        type: "Column",
+                        properties: {
+                          gap: "small",
+                          children: [
+                            {
+                              id: "product-name",
+                              type: "Text",
+                              properties: {
+                                text: {
+                                  literalString: "Wireless Headphones Pro",
+                                },
+                                usageHint: "h4",
+                              },
+                            },
+                            {
+                              id: "product-price",
+                              type: "Text",
+                              properties: {
+                                text: { literalString: "$199.99" },
+                                usageHint: "body",
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  id: "divider",
+                  type: "Divider",
+                  properties: {},
+                },
+                {
+                  id: "details-col",
+                  type: "Column",
+                  properties: {
+                    gap: "small",
+                    children: [
+                      {
+                        id: "delivery-row",
+                        type: "Row",
+                        properties: {
+                          gap: "small",
+                          alignment: "center",
+                          children: [
+                            {
+                              id: "delivery-icon",
+                              type: "Icon",
+                              properties: {
+                                name: { literalString: "van" },
+                              },
+                            },
+                            {
+                              id: "delivery-text",
+                              type: "Text",
+                              properties: {
+                                text: {
+                                  literalString: "Arrives Dec 18 - Dec 20",
+                                },
+                                usageHint: "body",
+                              },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        id: "seller-row",
+                        type: "Row",
+                        properties: {
+                          gap: "small",
+                          children: [
+                            {
+                              id: "seller-label",
+                              type: "Text",
+                              properties: {
+                                text: { literalString: "Sold by:" },
+                                usageHint: "caption",
+                              },
+                            },
+                            {
+                              id: "seller-name",
+                              type: "Text",
+                              properties: {
+                                text: { literalString: "TechStore Official" },
+                                usageHint: "body",
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  id: "view-btn",
+                  type: "Button",
+                  properties: {
+                    action: "view_details",
+                    child: {
+                      id: "view-btn-text",
+                      type: "Text",
+                      properties: {
+                        text: { literalString: "View Order Details" },
+                      },
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        },
+      },
+    ],
+  },
 ];
 
 type Message = {

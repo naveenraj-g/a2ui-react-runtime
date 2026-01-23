@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import { useDynamicComponent } from "./use-dynamic-component";
 import type { IconNode } from "./types";
 import type { MessageProcessor } from "./processor";
+import DynamicIcon from "@/utils/DynamicLucidIcon";
 
 interface IconProps {
   processor: MessageProcessor;
@@ -27,6 +28,7 @@ export function Icon({
     () => resolvePrimitive(component.properties.name),
     [resolvePrimitive, component.properties.name],
   );
+  console.log(name);
   const size = component.properties.size || "medium";
 
   const sizeClass = useMemo(() => {
@@ -64,7 +66,7 @@ export function Icon({
 
   return (
     <span className={`${sizeClass} text-gray-700`} style={{ flex: weight }}>
-      {iconMap[name] || "❓"}
+      {name ? <DynamicIcon name={name} /> : iconMap[name] || "❓"}
     </span>
   );
 }
