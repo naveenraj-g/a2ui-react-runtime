@@ -327,6 +327,63 @@ const PRESET_LAYOUTS = [
       },
     ],
   },
+  {
+    name: "Music Player",
+    components: [
+      {
+        id: "root",
+        type: "Card",
+        properties: {
+          child: {
+            id: "main-column",
+            type: "Column",
+            properties: {
+              children: [
+                {
+                  id: "album-art",
+                  type: "Image",
+                  properties: {
+                    url: {
+                      literalString:
+                        "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=300&h=300&fit=crop",
+                    },
+                    altText: { literalString: "Album Art" },
+                    fit: "cover",
+                  },
+                },
+                {
+                  id: "track-info",
+                  type: "Column",
+                  properties: {
+                    children: [
+                      {
+                        id: "title",
+                        type: "Text",
+                        properties: {
+                          text: { literalString: "Blinding Lights" },
+                          usageHint: "h3",
+                        },
+                      },
+                      {
+                        id: "artist",
+                        type: "Text",
+                        properties: {
+                          text: { literalString: "The Weeknd" },
+                          usage: "caption",
+                        },
+                      },
+                    ],
+                    gap: "small",
+                  },
+                },
+              ],
+              gap: "small",
+            },
+          },
+        },
+      },
+    ],
+  },
 ];
 
 type Message = {
