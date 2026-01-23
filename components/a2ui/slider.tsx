@@ -1,0 +1,92 @@
+/*
+  Copyright 2025 Google LLC
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+       https://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  */
+
+import { useState, useMemo } from "react";
+import { useDynamicComponent } from "./use-dynamic-component";
+import type { SliderNode } from "./types";
+import type { MessageProcessor } from "./processor";
+import { Slider as ShadCNSlider } from "@/components/ui/slider";
+import { Label } from "@/components/ui/label";
+
+interface SliderProps {
+  processor: MessageProcessor;
+  surfaceId: string;
+  component: SliderNode;
+  weight?: string | number;
+}
+
+export function Slider({
+  processor,
+  surfaceId,
+  component,
+  weight = "initial",
+}: SliderProps) {
+  const { resolvePrimitive } = useDynamicComponent(
+    processor,
+    surfaceId,
+    component,
+    weight,
+  );
+
+  const initialValue = useMemo(
+    () => Number(resolvePrimitive(component.properties.value)) || 0,
+    [resolvePrimitive, component.properties.value],
+  );
+  const [value, setValue] = useState(initialValue);
+  const label = useMemo(
+    () => resolvePrimitive(component.properties.label),
+    [resolvePrimitive, component.properties.label],
+  );
+  const min = useMemo(
+    () =>
+      Number(resolvePrimitive(component.properties.min)) ||
+      component.properties.minValue ||
+      0,
+    [resolvePrimitive, component.properties.min, component.properties.minValue],
+  );
+  const max = useMemo(
+    () =>
+      Number(resolvePrimitive(component.properties.max)) ||
+      component.properties.maxValue ||
+      100,
+    [resolvePrimitive, component.properties.max, component.properties.maxValue],
+  );
+  const step = useMemo(
+    () => Number(resolvePrimitive(component.properties.step)) || 1,
+    [resolvePrimitive, component.properties.step],
+  );
+
+  const handleChange = (value: number[]) => {
+    setValue(value[0]);
+  };
+
+  return (
+    <div className="space-y-2" style={{ flex: weight }}>
+      {label && (
+        <Label>
+          {label}: {value}
+        </Label>
+      )}
+      <ShadCNSlider
+        value={[value]}
+        min={min}
+        max={max}
+        step={step}
+        onValueChange={handleChange}
+      />
+    </div>
+  );
+}
