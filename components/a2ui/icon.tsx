@@ -23,13 +23,16 @@ export function Icon({
     component,
     weight,
   );
+  console.log(component);
 
   const name = useMemo(
     () => resolvePrimitive(component.properties.name),
     [resolvePrimitive, component.properties.name],
   );
-  console.log(name);
+
   const size = component.properties.size || "medium";
+
+  console.log(size);
 
   const sizeClass = useMemo(() => {
     switch (size) {
@@ -65,8 +68,15 @@ export function Icon({
   };
 
   return (
-    <span className={`${sizeClass} text-gray-700`} style={{ flex: weight }}>
-      {name ? <DynamicIcon name={name} /> : iconMap[name] || "❓"}
+    <span
+      className={`${sizeClass} text-muted-foreground`}
+      style={{ flex: weight }}
+    >
+      {name ? (
+        <DynamicIcon name={name} className="w-full h-full" />
+      ) : (
+        iconMap[name] || "❓"
+      )}
     </span>
   );
 }

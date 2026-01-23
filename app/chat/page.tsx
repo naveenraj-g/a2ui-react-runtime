@@ -402,7 +402,8 @@ const PRESET_LAYOUTS = [
                   id: "success-icon",
                   type: "Icon",
                   properties: {
-                    name: { literalString: "check_circle" },
+                    name: { literalString: "circle-check-big" },
+                    size: "large",
                   },
                 },
                 {
