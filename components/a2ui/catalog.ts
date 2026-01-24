@@ -1,4 +1,3 @@
-import type { AnyComponentNode } from "./types";
 import { Text } from "./text";
 import { Row } from "./row";
 import { Column } from "./column";

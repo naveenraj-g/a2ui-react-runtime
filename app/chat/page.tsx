@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { MessageCircle, Send } from "lucide-react";
+import { markdownLLMData } from "@/components/data";
 
 const processor = new MessageProcessor();
 
@@ -546,6 +547,28 @@ const PRESET_LAYOUTS = [
               ],
             },
           },
+        },
+      },
+    ],
+  },
+  {
+    name: "Sample MD",
+    components: [
+      {
+        id: "root",
+        type: "Row",
+        properties: {
+          children: [
+            {
+              id: "md",
+              type: "Text",
+              properties: {
+                text: {
+                  literalString: markdownLLMData,
+                },
+              },
+            },
+          ],
         },
       },
     ],

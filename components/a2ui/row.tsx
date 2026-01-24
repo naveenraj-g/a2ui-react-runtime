@@ -24,9 +24,9 @@ export function Row({
     weight,
   );
 
-  const alignment = component.properties.alignment || "stretch";
-  const distribution = component.properties.distribution || "start";
-  const gap = component.properties.gap || "medium";
+  const alignment = component.properties?.alignment || "stretch";
+  const distribution = component.properties?.distribution || "start";
+  const gap = component.properties?.gap || "medium";
 
   const styles = useMemo(() => {
     const alignMap: Record<string, string> = {

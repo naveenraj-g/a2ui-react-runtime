@@ -30,7 +30,7 @@ export function Button({
     }
   };
 
-  const variant = component.properties.primary ? "default" : "secondary";
+  const variant = component.properties?.primary ? "default" : "secondary";
 
   return (
     <ShadCNButton
