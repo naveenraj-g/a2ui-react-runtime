@@ -1,11 +1,11 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { MessageProcessor } from "@/components/a2ui/processor";
+import { createMessageProcessor } from "@/components/a2ui/processor";
 import { Renderer } from "@/components/a2ui/renderer";
 import type { AnyComponentNode } from "@/components/a2ui/types";
 
-const processor = new MessageProcessor();
+const processor = createMessageProcessor();
 
 // Mock table components
 const TABLE_COMPONENTS: any = {

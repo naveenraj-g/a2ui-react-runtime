@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, useMemo } from "react";
 import { useDynamicComponent } from "./use-dynamic-component";
 import type { CheckboxNode } from "./types";

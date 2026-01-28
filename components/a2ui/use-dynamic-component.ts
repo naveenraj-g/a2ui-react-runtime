@@ -1,17 +1,19 @@
+"use client";
+
 import { useMemo } from "react";
 import type {
   AnyComponentNode,
   A2UIClientEventMessage,
   ServerToClientMessage,
 } from "./types";
-import type { MessageProcessor } from "./processor";
+import type { IMessageProcessor } from "./processor";
 import { DEFAULT_THEME } from "./theme";
 
 let idCounter = 0;
 
 export function useDynamicComponent(
-  processor: MessageProcessor,
-  surfaceId: string,
+  processor: IMessageProcessor,
+  surfaceId: string | undefined,
   component: AnyComponentNode,
   weight: string | number = "initial",
 ) {
@@ -56,7 +58,9 @@ export function useDynamicComponent(
 
   const resolvePrimitive = (value: any): any => {
     if (!value || typeof value !== "object") {
-      return null;
+      return value;
+    } else if (Array.isArray(value)) {
+      return value.map(resolvePrimitive);
     } else if (value.literal !== undefined) {
       return value.literal;
     } else if (value.literalString !== undefined) {
@@ -69,7 +73,12 @@ export function useDynamicComponent(
       return processor.getData(component, value.path, surfaceId);
     }
 
-    return null;
+    // Handle complex objects (e.g., spec for chart)
+    const resolved: Record<string, any> = {};
+    for (const [key, val] of Object.entries(value)) {
+      resolved[key] = resolvePrimitive(val);
+    }
+    return resolved;
   };
 
   const getUniqueId = (prefix: string) => {

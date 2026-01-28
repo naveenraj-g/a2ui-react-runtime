@@ -6,75 +6,39 @@ import type {
 } from "./types";
 
 export interface IMessageProcessor {
-  getSurfaces(): ReadonlyMap<string, Surface>;
+  getSurfaces(): Record<string, Surface>;
   clearSurfaces(): void;
   processMessages(messages: ServerToClientMessage[]): void;
   getData(
     node: AnyComponentNode,
     relativePath: string,
-    surfaceId: string,
+    surfaceId: string | undefined,
   ): DataValue | null;
   setData(
     node: AnyComponentNode | null,
     relativePath: string,
     value: DataValue,
-    surfaceId: string,
+    surfaceId: string | undefined,
   ): void;
   resolvePath(path: string, dataContextPath?: string): string;
   dispatch(message: A2UIClientEventMessage): Promise<ServerToClientMessage[]>;
+  addEventListener(type: string, listener: EventListener): void;
+  removeEventListener(type: string, listener: EventListener): void;
 }
 
 export interface Surface {
   rootComponentId: string;
-  components: Map<string, any>;
-  dataModel: Map<string, DataValue>;
+  components: Record<string, any>;
+  dataModel: Record<string, DataValue>;
   styles: Record<string, string>;
 }
 
-export class MessageProcessor implements IMessageProcessor {
-  private surfaces = new Map<string, Surface>();
-  readonly events = new EventTarget();
+export function createMessageProcessor(): IMessageProcessor {
+  const surfaces: Record<string, Surface> = {};
+  const eventListeners: Record<string, EventListener[]> = {};
 
-  getSurfaces(): ReadonlyMap<string, Surface> {
-    return this.surfaces;
-  }
-
-  clearSurfaces(): void {
-    this.surfaces.clear();
-  }
-
-  processMessages(messages: ServerToClientMessage[]): void {
-    for (const message of messages) {
-      if (message.beginRendering) {
-        const { surfaceId, root, styles } = message.beginRendering;
-        this.surfaces.set(surfaceId, {
-          rootComponentId: root,
-          components: new Map(),
-          dataModel: new Map(),
-          styles: styles || {},
-        });
-      } else if (message.surfaceUpdate) {
-        const { surfaceId, components } = message.surfaceUpdate;
-        const surface = this.surfaces.get(surfaceId);
-        if (surface) {
-          for (const component of components) {
-            surface.components.set(component.id, component);
-          }
-        }
-      } else if (message.dataModelUpdate) {
-        const { surfaceId, path = "", contents } = message.dataModelUpdate;
-        const surface = this.surfaces.get(surfaceId);
-        if (surface) {
-          this.updateDataModel(surface.dataModel, path, contents);
-        }
-      } else if (message.deleteSurface) {
-        this.surfaces.delete(message.deleteSurface.surfaceId);
-      }
-    }
-  }
-
-  private updateDataModel(
-    dataModel: Map<string, DataValue>,
+  const updateDataModel = (
+    dataModel: Record<string, DataValue>,
     basePath: string,
     contents: Array<{
       key: string;
@@ -83,13 +47,13 @@ export class MessageProcessor implements IMessageProcessor {
       valueBoolean?: boolean;
       valueMap?: any[];
     }>,
-  ): void {
+  ): void => {
     const parts = basePath.split("/").filter(Boolean);
     let current: any = dataModel;
 
     for (const part of parts) {
       if (!current[part]) {
-        current[part] = new Map();
+        current[part] = {};
       }
       current = current[part];
     }
@@ -107,8 +71,8 @@ export class MessageProcessor implements IMessageProcessor {
       } else if (item.valueBoolean !== undefined) {
         value = item.valueBoolean;
       } else if (item.valueMap) {
-        const map = new Map<string, DataValue>();
-        this.updateDataModel(map, "", item.valueMap);
+        const map: Record<string, DataValue> = {};
+        updateDataModel(map, "", item.valueMap);
         value = map;
       } else {
         value = null;
@@ -116,73 +80,139 @@ export class MessageProcessor implements IMessageProcessor {
 
       current[item.key] = value;
     }
-  }
+  };
 
-  getData(
+  const getSurfaces = (): Record<string, Surface> => {
+    return surfaces;
+  };
+
+  const clearSurfaces = (): void => {
+    Object.keys(surfaces).forEach((key) => delete surfaces[key]);
+  };
+
+  const processMessages = (messages: ServerToClientMessage[]): void => {
+    for (const message of messages) {
+      if (message.beginRendering) {
+        const { surfaceId, root, styles } = message.beginRendering;
+        surfaces[surfaceId] = {
+          rootComponentId: root,
+          components: {},
+          dataModel: {},
+          styles: styles || {},
+        };
+      } else if (message.surfaceUpdate) {
+        const { surfaceId, components } = message.surfaceUpdate;
+        const surface = surfaces[surfaceId];
+        if (surface) {
+          for (const component of components) {
+            surface.components[component.id] = component;
+          }
+        }
+      } else if (message.dataModelUpdate) {
+        const { surfaceId, path = "", contents } = message.dataModelUpdate;
+        const surface = surfaces[surfaceId];
+        if (surface) {
+          updateDataModel(surface.dataModel, path, contents);
+        }
+      } else if (message.deleteSurface) {
+        delete surfaces[message.deleteSurface.surfaceId];
+      }
+    }
+  };
+
+  const getData = (
     node: AnyComponentNode,
     relativePath: string,
     surfaceId: string,
-  ): DataValue | null {
-    const surface = this.surfaces.get(surfaceId);
+  ): DataValue | null => {
+    const surface = surfaces[surfaceId];
     if (!surface) return null;
 
-    const resolvedPath = this.resolvePath(relativePath, node.dataContextPath);
+    const resolvedPath = resolvePath(relativePath, node.dataContextPath);
     const parts = resolvedPath.split("/").filter(Boolean);
     let current: any = surface.dataModel;
 
     for (const part of parts) {
-      if (!current || !("has" in current && current.has(part))) {
+      if (!current || !(part in current)) {
         return null;
       }
-      current = current.get(part);
+      current = current[part];
     }
 
     return current;
-  }
+  };
 
-  setData(
+  const setData = (
     node: AnyComponentNode | null,
     relativePath: string,
     value: DataValue,
     surfaceId: string,
-  ): void {
-    const surface = this.surfaces.get(surfaceId);
+  ): void => {
+    const surface = surfaces[surfaceId];
     if (!surface) return;
 
-    const resolvedPath = this.resolvePath(relativePath, node?.dataContextPath);
+    const resolvedPath = resolvePath(relativePath, node?.dataContextPath);
     const parts = resolvedPath.split("/").filter(Boolean);
     let current: any = surface.dataModel;
 
     for (let i = 0; i < parts.length - 1; i++) {
       const part = parts[i];
       if (!current[part]) {
-        current[part] = new Map();
+        current[part] = {};
       }
       current = current[part];
     }
 
     const lastPart = parts[parts.length - 1];
     current[lastPart] = value;
-  }
+  };
 
-  resolvePath(path: string, dataContextPath?: string): string {
+  const resolvePath = (path: string, dataContextPath?: string): string => {
     if (path.startsWith("/")) {
       return path;
     }
     return dataContextPath
       ? `${dataContextPath}/${path}`.replace(/\/+/g, "/")
       : path;
-  }
+  };
 
-  dispatch(message: A2UIClientEventMessage): Promise<ServerToClientMessage[]> {
+  const dispatch = (
+    message: A2UIClientEventMessage,
+  ): Promise<ServerToClientMessage[]> => {
     return new Promise((resolve) => {
-      const event = new CustomEvent<{
-        message: A2UIClientEventMessage;
-        resolve: (messages: ServerToClientMessage[]) => void;
-      }>("dispatch", { detail: { message, resolve } });
-      this.events.dispatchEvent(event);
+      const eventListenersForType = eventListeners["dispatch"] || [];
+      eventListenersForType.forEach((listener) => {
+        listener({
+          detail: { message, resolve },
+        } as any);
+      });
     });
-  }
+  };
+
+  const addEventListener = (type: string, listener: EventListener): void => {
+    if (!eventListeners[type]) {
+      eventListeners[type] = [];
+    }
+    eventListeners[type].push(listener);
+  };
+
+  const removeEventListener = (type: string, listener: EventListener): void => {
+    if (eventListeners[type]) {
+      eventListeners[type] = eventListeners[type].filter((l) => l !== listener);
+    }
+  };
+
+  return {
+    getSurfaces,
+    clearSurfaces,
+    processMessages,
+    getData,
+    setData,
+    resolvePath,
+    dispatch,
+    addEventListener,
+    removeEventListener,
+  };
 }
 
 export interface DispatchedEvent {

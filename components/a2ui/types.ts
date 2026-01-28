@@ -232,7 +232,7 @@ export interface A2UIClientEventMessage {
   userAction: {
     name: string;
     sourceComponentId: string;
-    surfaceId: string;
+    surfaceId?: string;
     timestamp: string;
     context?: { [k: string]: unknown };
   };
@@ -349,6 +349,22 @@ export interface SliderNode extends BaseComponentNode {
   properties: Slider;
 }
 
+export interface Chart {
+  spec?: { [key: string]: any };
+  values?: Array<{ [key: string]: any }>;
+  width?: number | string;
+  height?: number | string;
+  autoFilter?: boolean;
+  hideActions?: boolean;
+  hideTitle?: boolean;
+  hideLegend?: boolean;
+}
+
+export interface ChartNode extends BaseComponentNode {
+  type: "Chart";
+  properties: Chart;
+}
+
 export interface CustomNode extends BaseComponentNode {
   type: string;
   properties: { [key: string]: ResolvedValue };
@@ -374,7 +390,8 @@ export type AnyComponentNode =
   | MultipleChoiceNode
   | SliderNode
   | CustomNode
-  | TableNode;
+  | TableNode
+  | ChartNode;
 
 export interface Theme {
   components: {

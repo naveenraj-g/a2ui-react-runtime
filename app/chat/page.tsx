@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { MessageProcessor } from "@/components/a2ui/processor";
+import { createMessageProcessor } from "@/components/a2ui/processor";
 import { Renderer } from "@/components/a2ui/renderer";
 import type { AnyComponentNode } from "@/components/a2ui/types";
 import { Button } from "@/components/ui/button";
@@ -10,7 +10,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { MessageCircle, Send } from "lucide-react";
 import { markdownLLMData } from "@/components/data";
 
-const processor = new MessageProcessor();
+const processor = createMessageProcessor();
 
 const PRESET_LAYOUTS = [
   {

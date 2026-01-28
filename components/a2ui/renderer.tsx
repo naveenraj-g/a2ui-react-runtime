@@ -1,3 +1,5 @@
+"use client";
+
 import { DEFAULT_CATALOG } from "./catalog";
 import type { AnyComponentNode } from "./types";
 import type { MessageProcessor } from "./processor";

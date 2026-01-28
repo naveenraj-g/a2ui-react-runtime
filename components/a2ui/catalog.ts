@@ -17,6 +17,7 @@ import { Divider } from "./divider";
 import { Video } from "./video";
 import { AudioPlayer } from "./audio-player";
 import { Table } from "./table";
+import Chart from "./chart";
 
 export type ComponentConfig = {
   component: React.ComponentType<any>;
@@ -46,4 +47,5 @@ export const DEFAULT_CATALOG: Catalog = {
   Video: { component: Video },
   AudioPlayer: { component: AudioPlayer },
   Table: { component: Table },
+  Chart: { component: Chart },
 };

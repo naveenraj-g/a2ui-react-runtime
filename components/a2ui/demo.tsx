@@ -1,12 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { MessageProcessor } from "./processor";
+import { createMessageProcessor } from "./processor";
 import { Renderer } from "./renderer";
 import type { AnyComponentNode } from "./types";
 import { Button } from "@/components/ui/button";
 
-const processor = new MessageProcessor();
+const processor = createMessageProcessor();
 
 const CHAT_COMPONENTS: AnyComponentNode[] = [
   {
