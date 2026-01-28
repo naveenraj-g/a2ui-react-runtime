@@ -67,8 +67,7 @@ const DEFAULT_COLOR = colorScheme[2];
 
 type DataSpec = { values: Record<string, any>[] };
 type EncodingSpec = Extract<TopLevelSpec, { encoding?: any }>["encoding"] & {
-  x: { type: string; field: string };
-  y: { type: string; field: string };
+  [key: string]: any;
 };
 type MarkSpec = Extract<TopLevelSpec, { mark?: any }>["mark"] extends
   | string
@@ -334,7 +333,7 @@ function filterTopCategories(handler: any, encoding: EncodingSpec) {
   });
 
   // nominal values probably have different length, so we need to filter them
-  const filteredNominals = [];
+  const filteredNominals: Array<{ field: string; values: any[] }> = [];
   for (const nominalKey of nominalKeys) {
     const nomiAxis = encoding[nominalKey] as any;
     if (filteredNominals.some((val) => val.field === nomiAxis.field)) {
@@ -351,7 +350,7 @@ function filterTopCategories(handler: any, encoding: EncodingSpec) {
       values: topNominalValues,
     });
   }
-  const values = clonedValues.filter((val) =>
+  const values = clonedValues.filter((val: any) =>
     filteredNominals.every((nominal) =>
       nominal.values.includes(val[nominal.field]),
     ),
@@ -366,7 +365,7 @@ function getAllCategories(handler: any, encoding: EncodingSpec) {
   if (!nominalAxis) return [];
   const axisKey = encoding[nominalAxis] as any;
   const values = (handler.data as any).values;
-  const categoryValues = values.map((val) => val[axisKey.field]);
+  const categoryValues = values.map((val: any) => val[axisKey.field]);
   const uniqueCategoryValues = uniq(categoryValues);
 
   return uniqueCategoryValues;
@@ -387,18 +386,18 @@ function transformDataValues(
   },
 ) {
   // If axis x is temporal
-  if (encoding?.x?.type === "temporal") {
-    const transformedValues = data.values.map((val) => ({
+  if (encoding?.x?.type === "temporal" && encoding?.x?.field) {
+    const transformedValues = data.values.map((val: any) => ({
       ...val,
-      [encoding.x.field]: transformTemporalValue(val[encoding.x.field]),
+      [encoding.x!.field!]: transformTemporalValue(val[encoding.x!.field!]),
     }));
     return { ...data, values: transformedValues };
   }
   // If axis y is temporal
-  if (encoding?.y?.type === "temporal") {
-    const transformedValues = data.values.map((val) => ({
+  if (encoding?.y?.type === "temporal" && encoding?.y?.field) {
+    const transformedValues = data.values.map((val: any) => ({
       ...val,
-      [encoding.y.field]: transformTemporalValue(val[encoding.y.field]),
+      [encoding.y!.field!]: transformTemporalValue(val[encoding.y!.field!]),
     }));
     return { ...data, values: transformedValues };
   }
@@ -574,19 +573,21 @@ function Chart(props: ChartProps) {
       const chartSpec = specHandler.getChartSpec();
       const isDataEmpty = isEmpty((chartSpec?.data as any)?.values);
       if (isDataEmpty) {
-        setParsedSpec(null);
+        setTimeout(() => setParsedSpec(null), 0);
       } else if (chartSpec) {
         const compiled = compile(chartSpec, { config: specHandler.config });
-        setParsedSpec(compiled.spec);
+        setTimeout(() => setParsedSpec(compiled.spec), 0);
       }
     } catch (error: any) {
       console.error(error);
-      setParsedError({
-        code: "CLIENT_PARSE_ERROR",
-        shortMessage: "Failed to render chart visualization",
-        message: error?.message,
-        stacktrace: error?.stack?.split("\n") || [],
-      });
+      setTimeout(() => {
+        setParsedError({
+          code: "CLIENT_PARSE_ERROR",
+          shortMessage: "Failed to render chart visualization",
+          message: error?.message,
+          stacktrace: error?.stack?.split("\n") || [],
+        });
+      }, 0);
     }
     return () => {
       setParsedSpec(null);

@@ -4,7 +4,7 @@ import { Renderer } from "@/components/a2ui/renderer";
 import { createMessageProcessor } from "@/components/a2ui/processor";
 import type { AnyComponentNode } from "@/components/a2ui/types";
 import { chartSchema, lineChart, pieOrARC } from "@/docs/sample-ai-vegalite";
-import { useState, useMemo } from "react";
+import { useMemo } from "react";
 
 function ChartsPage() {
   // Create processor inside component to ensure it's client-side only
