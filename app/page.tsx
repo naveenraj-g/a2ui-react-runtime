@@ -1,7 +1,9 @@
-"use client";
-
-import { A2UIDemo } from "@/components/a2ui/demo";
+import Chat from "@/components/home/Chat";
 
 export default function Home() {
-  return <A2UIDemo />;
+  return (
+    <div className="h-screen max-w-5xl mx-auto">
+      <Chat />
+    </div>
+  );
 }

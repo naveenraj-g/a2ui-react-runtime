@@ -1,8 +1,8 @@
 "use client";
 
-import { Renderer } from "@/components/a2ui/renderer";
-import { createMessageProcessor } from "@/components/a2ui/processor";
-import type { AnyComponentNode } from "@/components/a2ui/types";
+import { Renderer } from "@/a2ui/rendering/renderer";
+import { createMessageProcessor } from "@/a2ui/rendering/processor";
+import type { AnyComponentNode } from "@/a2ui/types";
 import { chartSchema, lineChart, pieOrARC } from "@/docs/sample-ai-vegalite";
 import { useMemo } from "react";
 

@@ -1,0 +1,139 @@
+{
+  "id": "root",
+  "type": "Card",
+  "properties": {
+    "child": {
+      "id": "comparison",
+      "type": "Column",
+      "properties": {
+        "children": [
+          {
+            "id": "title",
+            "type": "Text",
+            "properties": {
+              "text": {
+                "literalString": "Gold vs Silver: 10-Year Comparison"
+              },
+              "usageHint": "h2"
+            }
+          },
+          {
+            "id": "tabs",
+            "type": "Tabs",
+            "properties": {
+              "tabItems": [
+                {
+                  "title": {
+                    "literalString": "Price"
+                  },
+                  "child": {
+                    "id": "priceChart",
+                    "type": "Chart",
+                    "properties": {
+                      "spec": {
+                        "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+                        "title": "Gold and Silver Price Comparison",
+                        "mark": "line",
+                        "encoding": {
+                          "x": { "field": "date", "type": "temporal" },
+                          "y": { "field": "gold", "type": "quantitative" },
+                          "color": { "field": "metal", "type": "nominal" }
+                        }
+                      },
+                      "values": [
+                        { "date": "2013", "gold": 1400, "silver": 25 },
+                        { "date": "2014", "gold": 1200, "silver": 20 },
+                        { "date": "2015", "gold": 1100, "silver": 15 },
+                        { "date": "2016", "gold": 1300, "silver": 18 },
+                        { "date": "2017", "gold": 1300, "silver": 17 },
+                        { "date": "2018", "gold": 1200, "silver": 15 },
+                        { "date": "2019", "gold": 1500, "silver": 18 },
+                        { "date": "2020", "gold": 1800, "silver": 25 },
+                        { "date": "2021", "gold": 1800, "silver": 25 },
+                        { "date": "2022", "gold": 1900, "silver": 22 }
+                      ],
+                      "width": "100%",
+                      "height": 300
+                    }
+                  }
+                },
+                {
+                  "title": {
+                    "literalString": "Returns"
+                  },
+                  "child": {
+                    "id": "returnsChart",
+                    "type": "Chart",
+                    "properties": {
+                      "spec": {
+                        "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+                        "title": "Gold and Silver Returns Comparison",
+                        "mark": "bar",
+                        "encoding": {
+                          "x": { "field": "date", "type": "temporal" },
+                          "y": { "field": "gold", "type": "quantitative" },
+                          "color": { "field": "metal", "type": "nominal" }
+                        }
+                      },
+                      "values": [
+                        { "date": "2013", "gold": 0.05, "silver": 0.1 },
+                        { "date": "2014", "gold": -0.1, "silver": -0.2 },
+                        { "date": "2015", "gold": -0.15, "silver": -0.25 },
+                        { "date": "2016", "gold": 0.15, "silver": 0.25 },
+                        { "date": "2017", "gold": 0.05, "silver": 0.05 },
+                        { "date": "2018", "gold": -0.1, "silver": -0.15 },
+                        { "date": "2019", "gold": 0.2, "silver": 0.3 },
+                        { "date": "2020", "gold": 0.25, "silver": 0.35 },
+                        { "date": "2021", "gold": 0.1, "silver": 0.15 },
+                        { "date": "2022", "gold": 0.15, "silver": 0.1 }
+                      ],
+                      "width": "100%",
+                      "height": 300
+                    }
+                  }
+                },
+                {
+                  "title": {
+                    "literalString": "Volatility"
+                  },
+                  "child": {
+                    "id": "volatilityChart",
+                    "type": "Chart",
+                    "properties": {
+                      "spec": {
+                        "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+                        "title": "Gold and Silver Volatility Comparison",
+                        "mark": "line",
+                        "encoding": {
+                          "x": { "field": "date", "type": "temporal" },
+                          "y": { "field": "gold", "type": "quantitative" },
+                          "color": { "field": "metal", "type": "nominal" }
+                        }
+                      },
+                      "values": [
+                        { "date": "2013", "gold": 0.15, "silver": 0.25 },
+                        { "date": "2014", "gold": 0.2, "silver": 0.3 },
+                        { "date": "2015", "gold": 0.25, "silver": 0.35 },
+                        { "date": "2016", "gold": 0.1, "silver": 0.15 },
+                        { "date": "2017", "gold": 0.15, "silver": 0.2 },
+                        { "date": "2018", "gold": 0.2, "silver": 0.25 },
+                        { "date": "2019", "gold": 0.1, "silver": 0.15 },
+                        { "date": "2020", "gold": 0.15, "silver": 0.2 },
+                        { "date": "2021", "gold": 0.1, "silver": 0.1 },
+                        { "date": "2022", "gold": 0.15, "silver": 0.15 }
+                      ],
+                      "width": "100%",
+                      "height": 300
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "alignment": "start",
+        "gap": "medium"
+      }
+    }
+  }
+}
